@@ -22,12 +22,22 @@ public class GirisSayfasi {
         if (sistem.getArabalar().isEmpty()) {
             sistem.arabaEkle(new Car("Toyota", "Corolla", 2020, "34ABC123", 500.0, "Beyaz", "Otomatik", "Benzin", 25000, false, false));
         }
+
+        // Örnek destek ekibi üyeleri ekle
+        if (sistem.getDestekEkibi().isEmpty()) {
+            DestekEkibi uye1 = new DestekEkibi("Ahmet", "Yılmaz", "5551234567", "ahmet@example.com", "Müşteri Hizmetleri");
+            DestekEkibi uye2 = new DestekEkibi("Mehmet", "Demir", "5559876543", "mehmet@example.com", "Teknik Destek");
+            sistem.destekEkibiUyesiEkle(uye1);
+            sistem.destekEkibiUyesiEkle(uye2);
+        }
+
         while (true) {
             System.out.println("\n--- Rent A Car Sistemi ---");
             System.out.println("1. Giriş Yap");
             System.out.println("2. Kayıt Ol");
             System.out.println("3. Yönetici Girişi");
-            System.out.println("4. Çıkış");
+            System.out.println("4. Destek Ekibi Raporu");
+            System.out.println("5. Çıkış");
             System.out.print("Seçiminiz: ");
             String secim = scanner.nextLine();
             switch (secim) {
@@ -45,6 +55,9 @@ public class GirisSayfasi {
                     sistem.arabalarDosyadanYukle();
                     break;
                 case "4":
+                    destekEkibiRaporuGoster();
+                    break;
+                case "5":
                     System.out.println("Çıkılıyor...");
                     return;
                 default:
@@ -110,6 +123,23 @@ public class GirisSayfasi {
             panel.paneliBaslat();
         } else {
             System.out.println("Hatalı yönetici girişi!");
+        }
+    }
+
+    private void destekEkibiRaporuGoster() {
+        System.out.println("\n=== Destek Ekibi Raporu ===");
+        sistem.destekEkibiRaporuOlustur();
+        
+        System.out.println("\n1. Ana Menüye Dön");
+        System.out.println("0. Çıkış");
+        System.out.print("Seçiminiz: ");
+        
+        int secim = scanner.nextInt();
+        scanner.nextLine();
+        
+        if (secim == 0) {
+            System.out.println("Programdan çıkılıyor...");
+            System.exit(0);
         }
     }
 } 

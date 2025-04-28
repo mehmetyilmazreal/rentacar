@@ -1,11 +1,16 @@
 // KullaniciPaneli.java
 // Kullanıcı işlemleri menüsü.
 import java.util.Scanner;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
+import java.util.List;
 
 public class KullaniciPaneli {
     private RentACarSystem sistem;
     private Customer musteri;
     private Scanner scanner;
+    private static final DateTimeFormatter DATE_FORMATTER = DateTimeFormatter.ofPattern("dd/MM/yyyy");
 
     public KullaniciPaneli(RentACarSystem sistem, Customer musteri, Scanner scanner) {
         this.sistem = sistem;
@@ -66,22 +71,67 @@ public class KullaniciPaneli {
     }
 
     private void aracKirala() {
-        araclariListele();
+        // Tarih seçimi
+        LocalDate baslangicTarihi = tarihSec("Başlangıç tarihi (GG/AA/YYYY): ");
+        LocalDate bitisTarihi = tarihSec("Bitiş tarihi (GG/AA/YYYY): ");
+        
+        if (bitisTarihi.isBefore(baslangicTarihi)) {
+            System.out.println("Bitiş tarihi başlangıç tarihinden önce olamaz!");
+            return;
+        }
+
+        // Müsait araçları listele
+        List<Car> müsaitArabalar = sistem.müsaitArabalariGetir(baslangicTarihi, bitisTarihi);
+        
+        if (müsaitArabalar.isEmpty()) {
+            System.out.println("Seçilen tarih aralığında müsait araç bulunmamaktadır.");
+            return;
+        }
+
+        System.out.println("\n--- Müsait Araçlar (" + baslangicTarihi.format(DATE_FORMATTER) + " - " + bitisTarihi.format(DATE_FORMATTER) + ") ---");
+        int i = 1;
+        for (Car c : müsaitArabalar) {
+            System.out.println(i + ". " +
+                "Marka: " + c.getMarka() +
+                ", Model: " + c.getModel() +
+                ", Yıl: " + c.getYil() +
+                ", Plaka: " + c.getPlaka() +
+                ", Günlük Fiyat: " + c.getGunlukFiyat() + " TL" +
+                ", Renk: " + c.getRenk() +
+                ", Vites: " + c.getVites() +
+                ", Yakıt: " + c.getYakit()
+            );
+            i++;
+        }
+
         System.out.print("Kiralamak istediğiniz aracın numarası: ");
         int secim = Integer.parseInt(scanner.nextLine());
-        if (secim < 1 || secim > sistem.getArabalar().size()) {
+        if (secim < 1 || secim > müsaitArabalar.size()) {
             System.out.println("Geçersiz seçim!");
             return;
         }
-        Car secili = sistem.getArabalar().get(secim - 1);
-        System.out.print("Kaç gün kiralamak istiyorsunuz?: ");
-        int gun = Integer.parseInt(scanner.nextLine());
+
+        Car secili = müsaitArabalar.get(secim - 1);
+        long gunSayisi = java.time.temporal.ChronoUnit.DAYS.between(baslangicTarihi, bitisTarihi) + 1;
         System.out.print("Ödeme yöntemi (Nakit/Kredi Kartı/Banka Kartı): ");
         String odemeYontemi = scanner.nextLine();
         double depozito = secili.getGunlukFiyat() * 0.2;
-        double toplam = secili.getGunlukFiyat() * gun;
-        sistem.arabaKirala(secili, musteri, java.time.LocalDate.now(), java.time.LocalDate.now().plusDays(gun), depozito, "", odemeYontemi);
+        double toplam = secili.getGunlukFiyat() * gunSayisi;
+        
+        sistem.arabaKirala(secili, musteri, baslangicTarihi, bitisTarihi, depozito, "", odemeYontemi);
         System.out.println("Kiralama başarılı! Toplam ücret: " + toplam + " TL, Depozito: " + depozito + " TL, Ödeme Yöntemi: " + odemeYontemi);
+    }
+
+    private LocalDate tarihSec(String mesaj) {
+        while (true) {
+            try {
+                System.out.print(mesaj);
+                String tarihStr = scanner.nextLine();
+                return LocalDate.parse(tarihStr, DATE_FORMATTER);
+            } catch (DateTimeParseException e) {
+                System.out.println("Geçersiz tarih formatı! Lütfen GG/AA/YYYY formatında giriniz.");
+            }
+        }
     }
 
     private void aktifKiralamalarim() {
@@ -89,7 +139,8 @@ public class KullaniciPaneli {
         int i = 1;
         for (Rental r : sistem.getKiralamalar()) {
             if (r.getMusteri().equals(musteri) && r.getDurum() == Durum.AKTIF) {
-                System.out.println(i + ". " + r.getAraba().getMarka() + " " + r.getAraba().getModel() + " - " + r.getBaslangicTarihi() + " - " + r.getBitisTarihi());
+                System.out.println(i + ". " + r.getAraba().getMarka() + " " + r.getAraba().getModel() + 
+                    " - " + r.getBaslangicTarihi().format(DATE_FORMATTER) + " - " + r.getBitisTarihi().format(DATE_FORMATTER));
                 i++;
             }
         }

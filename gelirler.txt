@@ -1,0 +1,2 @@
+Gelir{aciklama='porche 911 kiralama geliri (10 gün) - KDV: 15000.0 TL', miktar=90000.0, tarih=2025-04-29, tur=KIRALAMA}
+Gelir{aciklama='porche 911 depozito', miktar=1500.0, tarih=2025-04-29, tur=DEPOZITO}
