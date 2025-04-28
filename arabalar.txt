@@ -1,0 +1,2 @@
+Toyota,Corolla,2020,34ABC123,500.0,Beyaz,Otomatik,Benzin,25000,false,false
+BMW,M5,2023,31MY999,1250.0,MAVİ,Manuel,Benzin,12546,false,false

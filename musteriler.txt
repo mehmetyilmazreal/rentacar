@@ -1,0 +1,2 @@
+Ali,Veli,12345678901,05551234567,ali@eposta.com,İstanbul,E123456,B,1990-01-01,1234,0.0,false
+Mehmet,Yılmaz,11111111111,11111111111,memo@gmail.com,Online,11111111111,B,2003-04-21,1234,0.0,false
