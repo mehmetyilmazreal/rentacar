@@ -115,11 +115,14 @@ public class KullaniciPaneli {
         long gunSayisi = java.time.temporal.ChronoUnit.DAYS.between(baslangicTarihi, bitisTarihi) + 1;
         System.out.print("Ödeme yöntemi (Nakit/Kredi Kartı/Banka Kartı): ");
         String odemeYontemi = scanner.nextLine();
-        double depozito = secili.getGunlukFiyat() * 0.2;
-        double toplam = secili.getGunlukFiyat() * gunSayisi;
+
+        // Kiralama işlemini gerçekleştir
+        sistem.arabaKirala(musteri, secili, baslangicTarihi, bitisTarihi);
         
-        sistem.arabaKirala(secili, musteri, baslangicTarihi, bitisTarihi, depozito, "", odemeYontemi);
-        System.out.println("Kiralama başarılı! Toplam ücret: " + toplam + " TL, Depozito: " + depozito + " TL, Ödeme Yöntemi: " + odemeYontemi);
+        // İşlem tamamlandıktan sonra otomatik çıkış
+        System.out.println("\nAna menüye dönmek için herhangi bir tuşa basın...");
+        scanner.nextLine();
+        return;
     }
 
     private LocalDate tarihSec(String mesaj) {

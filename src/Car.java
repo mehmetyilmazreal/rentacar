@@ -12,6 +12,7 @@ public class Car {
     private int kilometre;
     private boolean kisMit;
     private boolean bakimGerekliMi;
+    private boolean mevcut;
 
     // Yapıcı metod
     public Car(String marka, String model, int yil, String plaka, double gunlukFiyat, String renk, String vites, String yakit, int kilometre, boolean kisMit, boolean bakimGerekliMi) {
@@ -26,6 +27,7 @@ public class Car {
         this.kilometre = kilometre;
         this.kisMit = kisMit;
         this.bakimGerekliMi = bakimGerekliMi;
+        this.mevcut = true; // Varsayılan olarak araç müsait
     }
 
     // Getter ve setter metodları
@@ -40,6 +42,8 @@ public class Car {
     public int getKilometre() { return kilometre; }
     public boolean isKisMit() { return kisMit; }
     public boolean isBakimGerekliMi() { return bakimGerekliMi; }
+    public boolean isMevcut() { return mevcut; }
+    public void setMevcut(boolean mevcut) { this.mevcut = mevcut; }
 
     // Bakım gerekliliğini günceller
     public void setBakimGerekliMi(boolean bakimGerekliMi) {

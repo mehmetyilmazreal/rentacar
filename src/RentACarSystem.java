@@ -491,4 +491,72 @@ public class RentACarSystem {
         }
         return departmanlar;
     }
+
+    public void arabaKirala(Customer musteri, Car araba, LocalDate baslangicTarihi, LocalDate bitisTarihi) {
+        if (!araba.isMevcut()) {
+            System.out.println("Üzgünüz, bu araç şu anda müsait değil.");
+            return;
+        }
+
+        if (araba.isBakimGerekliMi()) {
+            System.out.println("Üzgünüz, bu araç bakımda olduğu için kiralanamaz.");
+            return;
+        }
+
+        // Kiralama süresini hesapla
+        long kiralamaGunSayisi = ChronoUnit.DAYS.between(baslangicTarihi, bitisTarihi);
+        double toplamUcret = araba.getGunlukFiyat() * kiralamaGunSayisi;
+        double depozito = araba.getGunlukFiyat() * 2;
+
+        System.out.println("\nKiralama Detayları:");
+        System.out.println("Araç: " + araba.getMarka() + " " + araba.getModel());
+        System.out.println("Kiralama Süresi: " + kiralamaGunSayisi + " gün");
+        System.out.println("Günlük Ücret: " + araba.getGunlukFiyat() + " TL");
+        System.out.println("Toplam Ücret: " + toplamUcret + " TL");
+        System.out.println("Depozito: " + depozito + " TL");
+        System.out.println("Toplam Ödeme: " + (toplamUcret + depozito) + " TL");
+
+        System.out.print("\nKiralama işlemini onaylıyor musunuz? (E/H): ");
+        Scanner scanner = new Scanner(System.in);
+        String onay = scanner.nextLine().toUpperCase();
+
+        if (onay.equals("E")) {
+            araba.setMevcut(false);
+            musteri.harcamaEkle(toplamUcret + depozito);
+            
+            // Kiralama gelirini muhasebeye ekle
+            muhasebe.gelirEkle(new Gelir(
+                "Araç Kiralama - " + araba.getMarka() + " " + araba.getModel() + 
+                " (" + kiralamaGunSayisi + " gün)",
+                toplamUcret,
+                LocalDate.now(),
+                GelirTuru.KIRALAMA
+            ));
+            
+            // Depozito gelirini muhasebeye ekle
+            muhasebe.gelirEkle(new Gelir(
+                "Depozito - " + araba.getMarka() + " " + araba.getModel(),
+                depozito,
+                LocalDate.now(),
+                GelirTuru.DEPOZITO
+            ));
+            
+            System.out.println("\nKiralama işlemi başarıyla tamamlandı!");
+            
+            // E-posta bildirimi gönder
+            System.out.println("\nE-posta Bildirimi:");
+            System.out.println("Sayın " + musteri.getAd() + " " + musteri.getSoyad() + ",");
+            System.out.println("Kiralama işleminiz başarıyla tamamlanmıştır.");
+            System.out.println("Kiralama Detayları:");
+            System.out.println("- Araç: " + araba.getMarka() + " " + araba.getModel());
+            System.out.println("- Kiralama Tarihi: " + baslangicTarihi);
+            System.out.println("- İade Tarihi: " + bitisTarihi);
+            System.out.println("- Toplam Ücret: " + toplamUcret + " TL");
+            System.out.println("- Depozito: " + depozito + " TL");
+            System.out.println("\nBizi tercih ettiğiniz için teşekkür ederiz!");
+            System.out.println("İyi yolculuklar dileriz!");
+        } else {
+            System.out.println("Kiralama işlemi iptal edildi.");
+        }
+    }
 } 

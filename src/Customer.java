@@ -43,6 +43,7 @@ public class Customer {
     public String getEhliyetSinifi() { return ehliyetSinifi; }
     public LocalDate getDogumTarihi() { return dogumTarihi; }
     public double getToplamHarcamasi() { return toplamHarcamasi; }
+    public void setToplamHarcama(double toplamHarcama) { this.toplamHarcamasi = toplamHarcama; }
     public boolean isSadikMusteri() { return sadikMusteri; }
     public String getSifre() { return sifre; }
 
