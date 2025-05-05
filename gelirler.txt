@@ -4,3 +4,7 @@ Gelir{aciklama='porche 911 kiralama geliri (13 gün) - KDV: 19500.0 TL', miktar=
 Gelir{aciklama='porche 911 depozito', miktar=1500.0, tarih=2025-04-29, tur=DEPOZITO}
 Gelir{aciklama='Araç Kiralama - porche 911 (9 gün)', miktar=67500.0, tarih=2025-04-29, tur=KIRALAMA}
 Gelir{aciklama='Depozito - porche 911', miktar=15000.0, tarih=2025-04-29, tur=DEPOZITO}
+Gelir{aciklama='Araç Kiralama - porche 911 (12 gün)', miktar=90000.0, tarih=2025-04-29, tur=KIRALAMA}
+Gelir{aciklama='Depozito - porche 911', miktar=15000.0, tarih=2025-04-29, tur=DEPOZITO}
+Gelir{aciklama='Araç Kiralama - porche 911 (1 gün)', miktar=7500.0, tarih=2025-05-05, tur=KIRALAMA}
+Gelir{aciklama='Depozito - porche 911', miktar=15000.0, tarih=2025-05-05, tur=DEPOZITO}

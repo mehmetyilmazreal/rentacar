@@ -25,8 +25,8 @@ public class GirisSayfasi {
 
         // Örnek destek ekibi üyeleri ekle
         if (sistem.getDestekEkibi().isEmpty()) {
-            DestekEkibi uye1 = new DestekEkibi("Ahmet", "Yılmaz", "5551234567", "ahmet@example.com", "Müşteri Hizmetleri");
-            DestekEkibi uye2 = new DestekEkibi("Mehmet", "Demir", "5559876543", "mehmet@example.com", "Teknik Destek");
+            DestekEkibi uye1 = new DestekEkibi("DE001", "Ahmet", "Yılmaz", "5551234567", "ahmet@example.com", "Müşteri Hizmetleri", "destek123");
+            DestekEkibi uye2 = new DestekEkibi("DE002", "Mehmet", "Demir", "5559876543", "mehmet@example.com", "Teknik Destek", "destek123");
             sistem.destekEkibiUyesiEkle(uye1);
             sistem.destekEkibiUyesiEkle(uye2);
         }
@@ -36,7 +36,7 @@ public class GirisSayfasi {
             System.out.println("1. Giriş Yap");
             System.out.println("2. Kayıt Ol");
             System.out.println("3. Yönetici Girişi");
-            System.out.println("4. Destek Ekibi Raporu");
+            System.out.println("4. Destek Ekibi Girişi");
             System.out.println("5. Çıkış");
             System.out.print("Seçiminiz: ");
             String secim = scanner.nextLine();
@@ -55,7 +55,7 @@ public class GirisSayfasi {
                     sistem.arabalarDosyadanYukle();
                     break;
                 case "4":
-                    destekEkibiRaporuGoster();
+                    destekEkibiGirisi();
                     break;
                 case "5":
                     System.out.println("Çıkılıyor...");
@@ -126,20 +126,21 @@ public class GirisSayfasi {
         }
     }
 
-    private void destekEkibiRaporuGoster() {
-        System.out.println("\n=== Destek Ekibi Raporu ===");
-        sistem.destekEkibiRaporuOlustur();
+    private void destekEkibiGirisi() {
+        System.out.println("\n=== Destek Ekibi Girişi ===");
+        System.out.print("ID: ");
+        String id = scanner.nextLine();
+        System.out.print("Şifre: ");
+        String sifre = scanner.nextLine();
         
-        System.out.println("\n1. Ana Menüye Dön");
-        System.out.println("0. Çıkış");
-        System.out.print("Seçiminiz: ");
-        
-        int secim = scanner.nextInt();
-        scanner.nextLine();
-        
-        if (secim == 0) {
-            System.out.println("Programdan çıkılıyor...");
-            System.exit(0);
+        for (DestekEkibi uye : sistem.getDestekEkibi()) {
+            if (uye.getId().equals(id) && uye.sifreKontrol(sifre)) {
+                System.out.println("Hoşgeldiniz, " + uye.getAd() + " " + uye.getSoyad());
+                DestekEkibiPaneli panel = new DestekEkibiPaneli(sistem, uye, scanner);
+                panel.paneliBaslat();
+                return;
+            }
         }
+        System.out.println("Hatalı giriş!");
     }
 } 

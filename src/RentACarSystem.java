@@ -230,7 +230,7 @@ public class RentACarSystem {
     // Dosyadan tüm rezervasyonları yükler
     public void rezervasyonlariDosyadanYukle() {
         rezervasyonlar.clear();
-        try (java.io.BufferedReader br = new java.io.BufferedReader(new java.io.FileReader(REZERVASYON_DOSYA))) {
+            try (java.io.BufferedReader br = new java.io.BufferedReader(new java.io.FileReader(REZERVASYON_DOSYA))) {
             String satir;
             while ((satir = br.readLine()) != null) {
                 String[] d = satir.split(",");

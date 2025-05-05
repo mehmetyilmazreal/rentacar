@@ -101,20 +101,24 @@ public class YoneticiPaneli {
 
     private void destekEkibiUyesiEkle() {
         System.out.println("\n=== Yeni Destek Ekibi Üyesi Ekle ===");
+        System.out.print("ID: ");
+        String id = scanner.nextLine();
         System.out.print("Ad: ");
         String ad = scanner.nextLine();
         System.out.print("Soyad: ");
         String soyad = scanner.nextLine();
         System.out.print("Telefon: ");
         String telefon = scanner.nextLine();
-        System.out.print("Email: ");
+        System.out.print("E-posta: ");
         String email = scanner.nextLine();
         System.out.print("Departman: ");
         String departman = scanner.nextLine();
+        System.out.print("Şifre: ");
+        String sifre = scanner.nextLine();
         
-        DestekEkibi yeniUye = new DestekEkibi(ad, soyad, telefon, email, departman);
+        DestekEkibi yeniUye = new DestekEkibi(id, ad, soyad, telefon, email, departman, sifre);
         sistem.destekEkibiUyesiEkle(yeniUye);
-        System.out.println("Destek ekibi üyesi başarıyla eklendi!");
+        System.out.println("Yeni destek ekibi üyesi başarıyla eklendi!");
     }
 
     private void destekEkibiUyesiSil() {

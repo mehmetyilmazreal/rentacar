@@ -25,7 +25,8 @@ public class KullaniciPaneli {
             System.out.println("2. Araç Kirala");
             System.out.println("3. Aktif Kiralamalarım");
             System.out.println("4. Profil Bilgilerim");
-            System.out.println("5. Çıkış");
+            System.out.println("5. Destek Ekibi ile İletişim");
+            System.out.println("6. Çıkış");
             System.out.print("Seçiminiz: ");
             String secim = scanner.nextLine();
             switch (secim) {
@@ -42,6 +43,9 @@ public class KullaniciPaneli {
                     profilBilgilerim();
                     break;
                 case "5":
+                    destekEkibiIletisim();
+                    break;
+                case "6":
                     return;
                 default:
                     System.out.println("Geçersiz seçim!");
@@ -163,5 +167,78 @@ public class KullaniciPaneli {
         System.out.println("Doğum Tarihi: " + musteri.getDogumTarihi());
         System.out.println("Toplam Harcama: " + musteri.getToplamHarcamasi());
         System.out.println("Sadık Müşteri: " + (musteri.isSadikMusteri() ? "Evet" : "Hayır"));
+    }
+
+    private void destekEkibiIletisim() {
+        System.out.println("\n=== Destek Ekibi ile İletişim ===");
+        
+        // Destek ekibini listele
+        List<DestekEkibi> destekEkibi = sistem.getDestekEkibi();
+        if (destekEkibi.isEmpty()) {
+            System.out.println("Şu anda müsait destek ekibi üyesi bulunmamaktadır.");
+            return;
+        }
+
+        System.out.println("Müsait Destek Ekibi Üyeleri:");
+        for (int i = 0; i < destekEkibi.size(); i++) {
+            DestekEkibi uye = destekEkibi.get(i);
+            System.out.println((i + 1) + ". " + uye.getAd() + " " + uye.getSoyad() + " - " + uye.getDepartman());
+        }
+
+        System.out.print("İletişim kurmak istediğiniz destek ekibi üyesinin numarasını girin (0: İptal): ");
+        int secim = Integer.parseInt(scanner.nextLine());
+        
+        if (secim == 0) return;
+        if (secim < 1 || secim > destekEkibi.size()) {
+            System.out.println("Geçersiz seçim!");
+            return;
+        }
+
+        DestekEkibi secilenUye = destekEkibi.get(secim - 1);
+        DestekSohbeti sohbet = secilenUye.getSohbet(musteri.getTcKimlikNo());
+        
+        if (sohbet == null) {
+            sohbet = secilenUye.yeniSohbetBaslat(musteri.getTcKimlikNo());
+            System.out.println("Yeni destek talebi oluşturuldu.");
+        }
+
+        System.out.println("\n=== Sohbet ===");
+        System.out.println("Destek ekibi üyesi ile sohbet başlatıldı.");
+        
+        // Tüm mesaj geçmişini göster
+        List<ChatMesaji> mesajGecmisi = sohbet.getMesajGecmisi();
+        for (ChatMesaji mesaj : mesajGecmisi) {
+            String gonderen = mesaj.getGonderen().equals(musteri.getTcKimlikNo()) ? "Siz" : "Destek Ekibi";
+            String zaman = mesaj.getZaman().format(java.time.format.DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm"));
+            System.out.printf("\n[%s] %s:\n%s\n", zaman, gonderen, mesaj.getMesaj());
+        }
+
+        System.out.println("\nMesajınızı yazın (çıkmak için 'q' yazın):");
+
+        while (true) {
+            // Okunmamış mesajları göster
+            List<ChatMesaji> okunmamisMesajlar = sohbet.getOkunmamisMesajlar(musteri.getTcKimlikNo());
+            if (!okunmamisMesajlar.isEmpty()) {
+                for (ChatMesaji mesaj : okunmamisMesajlar) {
+                    String zaman = mesaj.getZaman().format(java.time.format.DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm"));
+                    System.out.printf("\n[%s] Destek Ekibi:\n%s\n", zaman, mesaj.getMesaj());
+                }
+            }
+
+            // Kullanıcı mesajını al
+            System.out.print("\nMesajınız: ");
+            String mesaj = scanner.nextLine();
+            
+            if (mesaj.equalsIgnoreCase("q")) {
+                System.out.println("Sohbet sonlandırıldı.");
+                break;
+            }
+
+            // Mesajı gönder
+            sohbet.mesajGonder(musteri.getTcKimlikNo(), mesaj);
+            String zaman = java.time.LocalDateTime.now().format(java.time.format.DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm"));
+            System.out.printf("\n[%s] Siz:\n%s\n", zaman, mesaj);
+            System.out.println("Mesajınız gönderildi.");
+        }
     }
 } 
